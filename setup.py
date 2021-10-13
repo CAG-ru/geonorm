@@ -19,5 +19,5 @@ setuptools.setup(
     package_data={'config': ['*.json']},
     include_package_data=True,
     packages=['geonorm'],
-    install_requires=['requests', 'pandas', 'natasha', 'sklearn', 'thefuzz'],
+    install_requires=['requests', 'pandas', 'natasha', 'sklearn', 'thefuzz', 'python-Levenshtein'],
 )
