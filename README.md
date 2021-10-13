@@ -23,7 +23,7 @@ from geonorm.geonormaliser_utils import decompose #Импорт метода
 S = decompose('Челябинская Область, г. Челябинск, проспект Ленина') 
 
 #Применение метода к серии
-X_dec = X.apply(decompose)
+X_dec = X['address'].apply(decompose)
 
 #X - pd.Series со строками вида 'обл. Иркутская, г. Братск, жилрайон. Гидростроитель, ул. Байкальская, д. 70'
 #X_dec - набор словарей вида {'region': 'Иркутская', 'region_type': 'область', 'municipality': '', 'municipality_type': '',
@@ -48,7 +48,7 @@ from geonorm.geomatch import Geomatch
 matcher = Geomatch(standard_db=standard_df,
                   match_columns=['region', 'settlement', 'municipality'])
 #Применение метода
-X_norm = matcher(X).fillna('')
+X_norm = matcher(X_dec)
 #X_norm - аналогичный датафрейм с нормализованными данными и дополнительной информацией
 ```
 
@@ -73,7 +73,7 @@ matcher = Geonormaliser(standard_db=standard_df,
                       #match_columns - адресные элементы поиска
                       #порядок колонок имеет значение т.к. определяет порядок фильтрации множеств
 #Применение метода             
-X_norm = matcher(X).fillna('') 
+X_norm = matcher(X_dec)
 #X - pd.DataFrame или набор словарей вида {'region': 'Иркутская', 'municipality': '', 'settlement': 'Братск'}
 #X_norm - аналогичный датафрейм с нормализованными данными и дополнительной информацией
 ```
