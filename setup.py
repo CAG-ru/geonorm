@@ -16,7 +16,7 @@ setuptools.setup(
         "Bug Tracker": "https://github.com/CAG-ru/geonorm/issues"
     },
     license='Apache',
-    package_data={'config': ['*.json']},
+    package_data={'config': ['geonorm/*.json']},
     include_package_data=True,
     # packages=['geonorm', 'geonorm.nat_new', 'geonorm.nat_new.grammars'],
     packages=['geonorm', 'geonorm.nat_new', 'geonorm.nat_new.grammars'],
