@@ -9,17 +9,15 @@
 ## Установка
 
 ```shell
-pip3 install git+https://github.com/CAG-ru/geonorm
+pip install git+https://github.com/CAG-ru/geonorm
 ```
 
 ## Декомпозиция
 Метод *decompose* применяется к текстовой адресной строке и возвращает словарь в котором адрес разбит поэлементно *[region, municipality, settlement, location, street, house]*.
-
 Ключ *not_decompose* в результате указывает на нераспознанные фрагменты адресной строки.
 
 ```shell
-sys.path.insert(0, './cpur') #Установка пути к репозиторию, если мы не в нём
-from lib.geonormaliser.geonormaliser_utils import decompose #Импорт метода
+from geonorm.geonormaliser_utils import decompose #Импорт метода
 
 #Применение метода к строке
 S = decompose('Челябинская Область, г. Челябинск, проспект Ленина') 
@@ -35,37 +33,37 @@ X_dec = X.apply(decompose)
 
 ## Нормализация
 Методы мэтчинга применяются к датафрейму или словарю с ранее декомпозированным адресом *[region, municipality, settlement, location, street, house]*. Пользователю доступны два независимых класса-мэтчера:
-
 1. Geonormaliser - в основе композитный метод с использованием трех подходов: 
-
     * точное соответствие подстроки;
-
     * yandex-speller + точное соответствие, если не сработал первый метод;
-
     * FuzzyWuzy для случаев когда предыдущие методы не справились.
-
 2. Geomatch - в основе посимвольный *tf-idf* и поиск ближайшего соседа по косинусному расстоянию.
 
 Для нормализации требуется эталонный датасет определённой структуры (см. ниже, по умолчанию используется встроенный малый эталон).
 
 ### Импорт Geomatch
 ```shell
-from lib.geonormaliser.geomatch import Geomatch
-
+from geonorm.geomatch import Geomatch
 #Инициализация мэтчера
 matcher = Geomatch(standard_db=standard_df,
                   match_columns=['region', 'settlement', 'municipality'])
-
 #Применение метода
 X_norm = matcher(X).fillna('')
-
 #X_norm - аналогичный датафрейм с нормализованными данными и дополнительной информацией
 ```
 
+| | |
+| ---------- | -- |
+| Parameters | **standard_db : *pd.DataFrame()*** - эталонный датафрейм |
+|            | **skip_dead_end_fields : *int, default 1*** - количество тупиковых адресных элементов поиска которые можно проигнорировать
+|            | **match_columns : *list, default ['region', 'municipality', 'setlement']*** - адресные элементы поиска, порядок колонок имеет значение т.к. определяет порядок фильтрации множеств
+| Methods    | **\_\_call\_\_()** |
+|            | ***pd.DataFrame(), dict*** - в зависимости от типа переменной поступающей на вход возвращает либо датафрейм нормализованных адресов, либо нормализованный справочник {'region': 'Иркутская', 'municipality': '', 'settlement': 'Братск'}|
+
+
 ### Импорт Geonormaliser
 ```shell
-from lib.geonormaliser.geonormaliser import Geonormaliser
-
+from geonorm.geonormaliser import Geonormaliser
 #Инициализация мэтчера
 matcher = Geonormaliser(standard_db=standard_df, 
                       use_speller=True,
@@ -76,16 +74,26 @@ matcher = Geonormaliser(standard_db=standard_df,
                       #порядок колонок имеет значение т.к. определяет порядок фильтрации множеств
 #Применение метода             
 X_norm = matcher(X).fillna('') 
-
 #X - pd.DataFrame или набор словарей вида {'region': 'Иркутская', 'municipality': '', 'settlement': 'Братск'}
 #X_norm - аналогичный датафрейм с нормализованными данными и дополнительной информацией
 ```
 
+| | |
+| ---------- | -- |
+| Parameters | **standard_db : *pd.DataFrame()*** - эталонный датафрейм |
+|            | **match_columns : *list, default ['region', 'municipality', 'setlement']*** - адресные элементы поиска, порядок колонок имеет значение т.к. определяет порядок фильтрации множеств |
+|            | **use_speller: *bool, default True*** - использовать Яндекс Спеллер для поиска или нет |
+|            | **use_levenstein: *bool, default True*** - использовать или нет расстояние Левенштейна |
+|            | **levenshtein_threshold: *int, deafault 10*** - если похожесть найденного с помощью расстояния Левенштейна уровня адреса меньше, чем levenshtein_threshold, то найденный вариант отбрасывается |
+| Methods    | **\_\_call\_\_()** |
+|            | ***pd.DataFrame(), pd.Series, dict*** - в зависимости от типа переменной поступающей на вход возвращает либо датафрейм нормализованных адресов, либо нормализованный справочник {'region': 'Иркутская', 'municipality': '', 'settlement': 'Братск'}|
+
+
 ### Возможности параллелизации
 Возможен вариант использования библиотеки pandarallel на этапе распараллеливания метода apply.
 ```shell
-from lib.geonormaliser.geomatch import Geomatch
-from lib.geonormaliser.geonormaliser_utils import decompose
+from geonorm.geomatch import Geomatch
+from geonorm.geonormaliser_utils import decompose
 from pandarallel import pandarallel #Инициализация библиотеки
 pandarallel.initialize(progress_bar=False, nb_workers=os.cpu_count()-1)
 
@@ -103,16 +111,18 @@ X_norm = X.parallel_apply(match_expand, axis=1, result_type="expand").fillna('')
 
 ## Тестирование 
 
-Для оценки работы были подготовлены тест-сеты. 
-Пользователь может самостоятельно протестировать парсер. Для этого можно запустить `test_report.py`, используя следующую команду:
+Для оценки работы были подготовлены тест-сеты, размещенные в папке `test_data`
+Пользователь может самостоятельно протестировать инструмент. Для этого можно запустить `run_tests.py`, используя следующую команду:
 
-```
-python -m unittest -v test_report.py
+```shell
+python run_tests.py
 ```
 
 ## Контакты разработчиков
 
 [Центр перспективных управленческих решений](https://cpur.ru/), проект [«Инфраструктура научно-исследовательских данных»](https://data-in.ru/)
 
-Мария Василевская, [m.vasilevskaia@cpur.ru]  
+Николай Давыдов, [n.davydov@data-in.ru]  
+Максим Веденьков, [m.vedenkov@data-in.ru]
 Константин Глонин, [k.glonin@data-in.ru]
+Данила Валько, [d.valko@data-in.ru]
