@@ -16,6 +16,6 @@ setuptools.setup(
         "Bug Tracker": "https://github.com/CAG-ru/geonorm/issues"
     },
     license='Apache',
-    packages=['toolbox'],
+    packages=['geonorm'],
     install_requires=['requests', 'pandas', 'natasha', 'sklearn', 'thefuzz', 'logging'],
 )
