@@ -8,9 +8,10 @@ with open(str(pathlib.Path(__file__).parent.resolve()) + '/descriptors_config.js
 
 
 def remove_descriptors(key, level):
-    for descriptor in descriptors_to_remove[key]:
-        level = level.replace('.', ' ')
-        level = re.sub(r'(^|[^\w])' + descriptor + r'([^\w]|$)', r'\1' + '' + r'\2', level)
-        level = level.strip()
+    if key in descriptors_to_remove:
+        for descriptor in descriptors_to_remove[key]:
+            level = level.replace('.', ' ')
+            level = re.sub(r'(^|[^\w])' + descriptor + r'([^\w]|$)', r'\1' + '' + r'\2', level)
+            level = level.strip()
     return level
 
