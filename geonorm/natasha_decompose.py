@@ -2,7 +2,7 @@ from natasha import (
     MorphVocab,
 )
 
-from geonorm_.geonorm.nat_new import (
+from geonorm.nat_new import (
     AddrExtractorConfig
 )
 
