@@ -17,5 +17,5 @@ setuptools.setup(
     },
     license='Apache',
     # packages=['geonorm'],
-    install_requires=['requests', 'pandas', 'natasha', 'sklearn', 'thefuzz', 'logging'],
+    install_requires=['requests', 'pandas', 'natasha', 'sklearn', 'thefuzz'],
 )
