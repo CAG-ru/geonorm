@@ -4,7 +4,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pathlib
 import logging
 from copy import copy
-import sys
 import numpy as np
 
 

@@ -1,6 +1,6 @@
 import pandas as pd
 import pathlib
-from .geonormaliser_utils import speller, decompose, search_reference_address,\
+from .geonormaliser_utils import search_reference_address,\
                                  get_pull_methods, get_address_by_level,\
                                  get_optional_parametres, valid_result,\
                                  load_standard
