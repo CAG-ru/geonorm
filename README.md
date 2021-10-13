@@ -95,7 +95,7 @@ X_norm = matcher(X).fillna('')
 from geonorm.geomatch import Geomatch
 from geonorm.geonormaliser_utils import decompose
 from pandarallel import pandarallel #Инициализация библиотеки
-pandarallel.initialize(progress_bar=False, nb_workers=os.cpu_count()-1)
+pandarallel.initialize(progress_bar=False, nb_workers=os.cpu_count())
 
 def decompose_expand(row): #Декомпозиция адресной строки
     return decompose(row[0])
@@ -111,7 +111,7 @@ X_norm = X.parallel_apply(match_expand, axis=1, result_type="expand").fillna('')
 
 ## Тестирование 
 
-Для оценки работы были подготовлены тест-сеты, размещенные в папке `test_data`
+Для оценки работы были подготовлены тест-сеты, размещенные в папке `data`
 Пользователь может самостоятельно протестировать инструмент. Для этого можно запустить `run_tests.py`, используя следующую команду:
 
 ```shell
