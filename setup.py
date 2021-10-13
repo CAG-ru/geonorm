@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='geonorm',
-    version='1',
+    version='1.1',
     author='INID',
     author_email='m.vedenkov@data-in.ru',
     description='Testing installation of Package',
@@ -18,6 +18,7 @@ setuptools.setup(
     license='Apache',
     package_data={'config': ['*.json']},
     include_package_data=True,
-    packages=['geonorm'],
+    # packages=['geonorm', 'geonorm.nat_new', 'geonorm.nat_new.grammars'],
+    packages=['geonorm', 'geonorm.nat_new', 'geonorm.nat_new.grammars'],
     install_requires=['requests', 'pandas', 'natasha', 'sklearn', 'thefuzz', 'python-Levenshtein'],
 )
