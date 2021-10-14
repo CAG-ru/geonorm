@@ -11,7 +11,7 @@ import os
 
 
 def download_standard(save_as='./standard.zip',
-                      url='https://ds1.data-in.ru/Rosgidromet/Zagryaznenie_poverkhnostnih_vod_RF_176/Zagryaznenie_poverkhnostnih_vod_RF_176_23.09.21.zip?',
+                      url='https://ds1.data-in.ru/Aggregated_datasets/FIAS%2BPochta_RF/Adress_klassificator_FIAS%2BPochta_RF_179_14.10.21.zip?',
                       replace=False
                       ):
     """
