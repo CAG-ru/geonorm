@@ -1,5 +1,5 @@
 from geonorm.core_test import *
-from geonorm.geonormaliser_utils import download_standard
+from geonorm.geonormaliser_utils import get_standard
 
 configs = [
     {
@@ -35,7 +35,7 @@ configs = [
 
 ]
 
-download_standard('../data/standard.zip', replace=False)
+get_standard('standard', '../data/', replace=False)
 prev_standard_df_file = None
 scores = []
 for config in configs:
