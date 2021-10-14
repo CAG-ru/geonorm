@@ -167,13 +167,13 @@ class Geomatch:
                         ids = test_ids
                     else:
                         skip_dead_end_fields += 1
-                        logging.info(f'action: SKIP_DEAD_END_FIELD \n'
+                        logging.debug(f'action: SKIP_DEAD_END_FIELD \n'
                                      f'field: {field} \n'
                                      f'name: {search_result_field["name"]} \n'
                                      f'score: {search_result_field["score"]}\n'
                                      f'ids: {search_result_field["ids"]}\n')
 
-                    logging.info(f'action: INFO \n'
+                    logging.debug(f'action: INFO \n'
                                  f'field: {field} \n'
                                  f'name: {search_result_field["name"]} \n'
                                  f'score: {search_result_field["score"]}\n'
