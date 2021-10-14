@@ -8,21 +8,38 @@ from sklearn.metrics import accuracy_score
 from .natasha_decompose import decompose
 from .text_utils import remove_descriptors
 import os
+import shutil
+from zipfile import ZipFile, ZIP_DEFLATED
+import logging
+logging.basicConfig(level=logging.INFO)
 
 
-def download_standard(save_as='./standard.zip',
-                      url='https://ds1.data-in.ru/Aggregated_datasets/FIAS%2BPochta_RF/Adress_klassificator_FIAS%2BPochta_RF_179_14.10.21.zip?',
-                      replace=False
+def get_standard(fname='standard', path='./', replace=False):
+    """
+    К сожалению не было возможности сразу выложить эталон отдельным архивом без меты отсюда и эта функция
+    """
+    if os.path.isfile(pathlib.Path(f'{path}/{fname}.zip')) and replace:
+        os.remove(pathlib.Path(f'{path}/{fname}.zip'))
+    if not os.path.isfile(pathlib.Path(f'{path}/{fname}.zip')):
+        logging.info('download standard')
+        download_standard()
+        logging.info('extract standard')
+        extract_standard()
+        os.remove(pathlib.Path('/tmp/std_tmp.zip'))
+        os.rename(pathlib.Path('/tmp/administrative_addresses.csv'), pathlib.Path(f'/tmp/{fname}.csv'))
+        logging.info('archive to new file')
+        archive_standard(fname)
+        os.remove(pathlib.Path(f'/tmp/{fname}.csv'))
+        logging.info('copy archive from tmp dir')
+        shutil.move(pathlib.Path(f'/tmp/{fname}.zip'), pathlib.Path(f'{path}/{fname}.zip'))
+
+
+def download_standard(url='https://ds1.data-in.ru/Aggregated_datasets/FIAS%2BPochta_RF/Adress_klassificator_FIAS%2BPochta_RF_179_14.10.21.zip?',
                       ):
     """
     Загрузка актуального эталона в текущую директорию
-    :param save_as: str
-    :param url: str
-    :param replace: bool
-    :return: str
     """
-    if os.path.isfile(save_as) and replace:
-        os.remove(save_as)
+    save_as = pathlib.Path('/tmp/std_tmp.zip')
     if not os.path.isfile(save_as):
         response = requests.get(url, allow_redirects=True)
         if response.status_code == 200:
@@ -35,9 +52,30 @@ def download_standard(save_as='./standard.zip',
         return save_as
 
 
+def extract_standard():
+    """
+    Разархивируем скаченный архив с чтобы достать из него эталон
+    """
+    archive = pathlib.Path('/tmp/std_tmp.zip')
+    with ZipFile(archive, 'r') as zipObject:
+        for curr_file in zipObject.namelist():
+            if 'administrative_addresses.csv' == curr_file:
+                zipObject.extract(curr_file, pathlib.Path('/tmp'))
+                logging.info(f'{curr_file} extracted')
+
+
+def archive_standard(standard='standard'):
+    """
+    Заархивируем эталон чтобы уменьшить его размер
+    """
+    zf = ZipFile(pathlib.Path(f'/tmp/{standard}.zip'), 'w', ZIP_DEFLATED)
+    zf.write(pathlib.Path(f'/tmp/{standard}.csv'))
+    zf.close()
+
+
 '''
     Функции создания параметров поиска.
-'''        
+'''
 def load_standard(standard_db=None, current_directory='./'):
     if type(standard_db) is pd.core.frame.DataFrame:
         standard = standard_db.reset_index()
