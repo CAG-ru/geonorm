@@ -18,5 +18,5 @@ setuptools.setup(
     include_package_data=True,
     package_data={'geonorm': ['geonorm/*.json', '*.json']},
     packages=['geonorm', 'geonorm.nat_new', 'geonorm.nat_new.grammars'],
-    install_requires=['requests', 'pandas', 'natasha', 'sklearn', 'thefuzz', 'python-Levenshtein-wheel'],
+    install_requires=['requests', 'pandas', 'natasha', 'sklearn', 'thefuzz', 'python-Levenshtein-wheels'],
 )
