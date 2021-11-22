@@ -20,9 +20,9 @@ class Geomatch:
         self.current_directory = str(pathlib.Path(__file__).parent.resolve())
 
         if type(standard_db) is pd.core.frame.DataFrame:
-            self.standard = standard_db.reset_index(drop=True)
+            self.standard = standard_db.reset_index(drop=True).fillna('')
         else:
-            self.standard = pd.read_csv(pathlib.Path(f'{self.current_directory}/standard.zip'), compression='zip')
+            self.standard = pd.read_csv(pathlib.Path(f'{self.current_directory}/standard.zip'), compression='zip').fillna('')
 
         # здесь можно задать threshold срабатывания для полей если не задано то threshold = 0
         if threshold is not None:
