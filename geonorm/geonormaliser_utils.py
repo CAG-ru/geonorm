@@ -83,7 +83,7 @@ def load_standard(standard_db=None, current_directory='./'):
         standard = pd.read_csv(pathlib.Path(f'{current_directory}/{standard_db}'), compression='zip', delimiter=';')
     else:
         standard = pd.read_csv(pathlib.Path(f'{current_directory}/standard.zip'), compression='zip', delimiter=';')
-    return standard
+    return standard.fillna('')
 
 
 def get_address_by_level(input_data, match_columns):
