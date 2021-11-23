@@ -12,6 +12,18 @@
 pip install git+https://github.com/CAG-ru/geonorm
 ```
 
+загрузка эталонного датасета с data-in.ru в текущую директорию.
+```shell
+from geonormaliser_utils import get_standard
+get_standard(fname='standard', path='./', replace=False)
+```
+
+загружаем эталон в переменную и фильтруем по интересуюшему региону(Челябинская Область), это позволит ускорить метчинг
+```shell
+standard_df = pd.read_csv('standard.zip', compression='zip', delimiter=';')
+standard_df = standard_df[standard_df['region']=='Челябинская']
+```
+
 ## Декомпозиция
 Метод *decompose* применяется к текстовой адресной строке и возвращает словарь в котором адрес разбит поэлементно *[region, municipality, settlement, location, street, house]*.
 Ключ *not_decompose* в результате указывает на нераспознанные фрагменты адресной строки.
