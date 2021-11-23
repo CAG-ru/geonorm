@@ -21,6 +21,8 @@ class Geomatch:
 
         if type(standard_db) is pd.core.frame.DataFrame:
             self.standard = standard_db.reset_index(drop=True)
+        elif type(standard_db) is str:
+            self.standard = pd.read_csv(pathlib.Path(f'{standard_db}'), compression='zip')
         else:
             self.standard = pd.read_csv(pathlib.Path(f'{self.current_directory}/standard.zip'), compression='zip')
         self.standard = self.standard.fillna('')
